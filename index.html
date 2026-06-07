@@ -177,6 +177,7 @@
 
 <div class="btn-area">
   <button class="btn-main" onclick="showRandom()">セリフを引く</button>
+  <button class="btn-main" onclick="captureAndShare()" style="background:rgba(200,169,110,0.1);">📸 画像でシェア</button>
 </div>
 
 <div class="counter" id="counter"></div>
@@ -281,7 +282,6 @@ const rawData = `これは借しだ。大きな借しだからな。敵と味方
 うわ～。これすごいよ兄ちゃん。
 （天ちん-vol.25 となりの元帥-）`;
 
-// （以降は元のJavaScriptコードと同じ）
 function parseData(raw) {
   const blocks = raw.trim().split(/\n\n+/);
   const result = [];
@@ -389,6 +389,46 @@ function showRandom() {
   if (candidates.length === 0) candidates = filtered;
   const picked = candidates[Math.floor(Math.random() * candidates.length)];
   showSerifu(picked);
+}
+
+// html2canvas を読み込む（CDN）
+const script = document.createElement('script');
+script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+document.head.appendChild(script);
+
+async function captureAndShare() {
+  if (!current) return alert('セリフを表示してからお試しください');
+
+  const card = document.querySelector('.card');
+  
+  try {
+    const canvas = await html2canvas(card, {
+      scale: 2,                    // 高解像度
+      backgroundColor: '#1a1410',
+      logging: false
+    });
+
+    // ダウンロード
+    const link = document.createElement('a');
+    link.download = `第14帝國_${current.chara}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+
+    // Xシェア用テキスト（自動入力）- 構文エラーを修正
+    const sourceText = current.source ? ` (${current.source})` : '';
+    const tweetText = encodeURIComponent(
+      `"${current.text}"\n\n` +
+      `— ${current.chara}${sourceText}\n\n` +
+      `第14帝國 非公式セリフアーカイブ`
+    );
+
+    const url = window.location.href;
+    window.open(`https://x.com/intent/tweet?text=${tweetText}&url=${encodeURIComponent(url)}`, '_blank');
+
+  } catch (e) {
+    alert('画像生成に失敗しました。もう一度お試しください。');
+    console.error(e);
+  }
 }
 
 document.getElementById('searchInput').addEventListener('keydown', e => { if (e.key === 'Enter') runSearch(); });
