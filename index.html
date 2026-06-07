@@ -177,7 +177,7 @@
 
 <div class="btn-area">
   <button class="btn-main" onclick="showRandom()">セリフを引く</button>
-  <button class="btn-main" onclick="captureAndShare()" style="background:rgba(200,169,110,0.1);">📸 画像でシェア</button>
+  <button class="btn-main" onclick="shareOnX()" style="background:rgba(200,169,110,0.1);">（Xでシェア）</button>
 </div>
 
 <div class="counter" id="counter"></div>
@@ -191,7 +191,7 @@ const rawData = `これは借しだ。大きな借しだからな。敵と味方
 よくぞ、あの戦火の中を…。
 （秋山祐少佐-vol.20 3年B組楠本先生-）
 
-現在敵は北門に持ちうる全ての兵力にて展開中。その数１０万に対し我が方は城内に5千。かかる総攻撃に対し城門を固く閉ざし、兵力の被害を最小限に抑えたとしても、一時間以内にこの城は落城いたします。
+現在敵は北門に持ちうる全ての兵力にて展開中。その数１０万に対し我が方は城内に5千.かかる総攻撃に対し城門を固く閉ざし、兵力の被害を最小限に抑えたとしても、一時間以内にこの城は落城いたします。
 （春木亮太朗大佐-Vol.11 元帥のミッキーマウス -）
 
 捕まったら逃げればいいんです。おとなしく捕まってる人間は犯罪者です。
@@ -221,7 +221,7 @@ const rawData = `これは借しだ。大きな借しだからな。敵と味方
 おはようか。「よい朝」だ。
 （楠本柊生帝國元帥-vol.10 元帥UFOにのる-）
 
-悪いが、お前の役目はもう終わったんだ。
+悪いが、お前の役目的はもう終わったんだ。
 （春木亮太朗大佐-vol.16 お魚になった元帥-）
 
 ８時４６分です。
@@ -391,44 +391,23 @@ function showRandom() {
   showSerifu(picked);
 }
 
-// html2canvas を読み込む（CDN）
-const script = document.createElement('script');
-script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-document.head.appendChild(script);
-
-async function captureAndShare() {
+// Xでシェアする機能
+function shareOnX() {
   if (!current) return alert('セリフを表示してからお試しください');
 
-  const card = document.querySelector('.card');
+  // テキストを作成
+  const sourceText = current.source ? ` (${current.source})` : '';
+  const tweetText = encodeURIComponent(
+    `"${current.text}"\n\n` +
+    `— ${current.chara}${sourceText}\n\n` +
+    `第14帝國 非公式セリフアーカイブ`
+  );
+
+  // サイトのURL
+  const url = window.location.href;
   
-  try {
-    const canvas = await html2canvas(card, {
-      scale: 2,                    // 高解像度
-      backgroundColor: '#1a1410',
-      logging: false
-    });
-
-    // ダウンロード
-    const link = document.createElement('a');
-    link.download = `第14帝國_${current.chara}.png`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-
-    // Xシェア用テキスト（自動入力）- 構文エラーを修正
-    const sourceText = current.source ? ` (${current.source})` : '';
-    const tweetText = encodeURIComponent(
-      `"${current.text}"\n\n` +
-      `— ${current.chara}${sourceText}\n\n` +
-      `第14帝國 非公式セリフアーカイブ`
-    );
-
-    const url = window.location.href;
-    window.open(`https://x.com/intent/tweet?text=${tweetText}&url=${encodeURIComponent(url)}`, '_blank');
-
-  } catch (e) {
-    alert('画像生成に失敗しました。もう一度お試しください。');
-    console.error(e);
-  }
+  // Xの投稿画面を開く
+  window.open(`https://x.com/intent/tweet?text=${tweetText}&url=${encodeURIComponent(url)}`, '_blank');
 }
 
 document.getElementById('searchInput').addEventListener('keydown', e => { if (e.key === 'Enter') runSearch(); });
