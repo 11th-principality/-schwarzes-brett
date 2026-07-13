@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>第14帝國 非公式セリフアーカイブ</title>
+<title>第14帝國 セリフアーカイブ</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&family=Shippori+Mincho:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -148,7 +148,7 @@
     width: 100%;
     max-width: 700px;
     padding: 0 1.5rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     position: relative;
     z-index: 1;
   }
@@ -341,6 +341,30 @@
 
   .btn-main:active { transform: scale(0.98); }
 
+  /* コピーボタン */
+  .btn-copy {
+    padding: 0.9rem 2rem;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-family: 'Noto Serif JP', serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: color 0.3s, border-color 0.3s;
+  }
+  .btn-copy:hover {
+    border-color: var(--gold-dim);
+    color: var(--gold-light);
+  }
+  .btn-copy.copied {
+    border-color: var(--gold);
+    color: var(--gold-light);
+  }
+
   /* カウンター */
   .counter {
     text-align: center;
@@ -375,7 +399,7 @@
     <div class="header-line right"></div>
   </div>
   <h1>第14帝國</h1>
-  <div class="subtitle">非公式セリフアーカイブ</div>
+  <div class="subtitle">セリフアーカイブ</div>
 </header>
 
 <div class="search-bar">
@@ -388,7 +412,14 @@
 <div class="filter-bar">
   <div class="filter-label">— キャラクターで絞り込む —</div>
   <div class="filter-scroll" id="filterScroll">
-    <button class="filter-btn active" data-chara="all">すべて</button>
+    <button class="filter-btn active" data-chara="all" onclick="setFilter('all')">すべて</button>
+  </div>
+</div>
+
+<div class="filter-bar" style="margin-bottom:2rem;">
+  <div class="filter-label">— vol. で絞り込む —</div>
+  <div class="filter-scroll" id="volScroll">
+    <button class="filter-btn active" data-vol="all" onclick="setVolFilter('all')">すべて</button>
   </div>
 </div>
 
@@ -407,6 +438,7 @@
 
 <div class="btn-area">
   <button class="btn-main" onclick="showRandom()">セリフを引く</button>
+  <button class="btn-copy" id="btnCopy" onclick="copySerifu()">コピー</button>
 </div>
 
 <div class="counter" id="counter"></div>
@@ -677,7 +709,7 @@ const rawData = `これは借しだ。大きな借しだからな。敵と味方
 （立花馨大将-vol.25 となりの元帥-）
 
 またユートピアやろうね！
-（秋山祐少佐vol.25 となりの元帥-）
+（秋山祐少佐-vol.25 となりの元帥-）
 
 ケンカしないようにな。
 （定光寺輝信中将-vol.25 となりの元帥-）
@@ -753,7 +785,311 @@ const rawData = `これは借しだ。大きな借しだからな。敵と味方
 （立花馨-vol.25 となりの元帥-）
 
 己が意志、己が信念に基づき行動するならばそれもよかろう。敵を倒すもよし、我がライヒスリッターを、我が第14帝國を、わが命を狙っても構わん。貴官らそれぞれが背負いし第14帝國の正義に従い戦うことを命令とする。
-（楠本柊生帝國元帥-vol.25 となりの元帥-）`;
+（楠本柊生帝國元帥-vol.25 となりの元帥-）
+
+この世界そのものが夢だがいつかここで私の想像を超越するようなことが起これば面白いのだがな。
+（楠本柊生-vol.25 となりの元帥-）
+
+自らの想像を超越した世界では創るべき未来を持たぬ。
+（楠本柊生帝國元帥-vol.25 となりの元帥-）
+
+小官が受けた特命でございましたので、小官と春木大佐のみでごさいます。
+（風間利之少佐-vol.16 お魚になった元帥-）
+
+強大な力に対しては、強大な力をもって対処するが常であるが、それがかなわぬ時、我々は地を這うしか生きる術を持たぬのか。否！いかな強大な敵であろうとも、倒れまいとする力を利用してやればよい。
+（楠本柊生帝國元帥-vol.18 走れ！元帥危機一髪-）
+
+地獄か極楽か…いずれにせよ次なる世界があってくれればよいがな
+（楠本柊生帝國元帥-vol.25 となりの元帥-）
+
+さらばだ。我が第14帝國。
+（楠本柊生帝國元帥-vol.25 となりの元帥-）
+
+そんな、小官のせいにするんですか！
+（風間利之少佐-vol.16 お魚になった元帥-）
+
+さようなら…柊生元帥…
+（定光寺輝信中将-vol.16 お魚になった元帥-）
+
+短い間だったが、柊生元帥が生き返ってくれたような気がして…本当に楽しかった。本当に、どうもありがとう。
+（定光寺輝信中将-vol.16 お魚になった元帥-）
+
+ふざけるな…これが帝國の運命であるというのか！これが帝國の宿命であるというのか！ならば何故私はここに存在している…認めんぞ…断じて認めぬ！
+（パン屋のPちゃん-vol.16 お魚になった元帥-）
+
+本当に撃つんだもんな…戦争って怖いな…
+（パン屋のPちゃん-vol.16 お魚になった元帥-）
+
+柊生元帥はパン屋ではない！
+（春木亮太朗大佐-vol.16 お魚になった元帥-）
+
+柊生元帥は以前からファンキーだろう！
+（春木亮太朗大佐-vol.16 お魚になった元帥-）
+
+お願いだ定光寺中将…あなたに死なれたら…何のために私は…
+（パン屋のPちゃん-vol.16 お魚になった元帥-）
+
+誰の記憶に残らずとも、誰からも感謝されずとも…私は…満足だ…
+（パン屋のPちゃん-vol.16 お魚になった元帥-）
+
+どうだ…私は民間人だが、帝國に生まれ、帝國に生き、そして今、帝國の運命を変えたぞ！！どうだ…どうだ！！！どうだ…柊生元帥、私は、あなたを越えましたか……
+（パン屋のPちゃん-vol.16 お魚になった元帥-）
+
+今宵、この時、この瞬間、すべては終わりを告げ、そのすべてが始まるのである。全身を耳にしてよく聞くがいい。諸君らの眼はその肉体を離れ精神世界第１４帝國への遥かなる旅路につくのである。
+（楠本柊生帝國元帥-vol.18 走れ！元帥危機一髪-）
+
+しかし、もしものことがあっても、私がご一緒であればと…私は自分の力を過信していたのだ…
+（定光寺輝信中将-vol.16 お魚になった元帥-）
+
+大いなる意志を感じることができたか！！！
+（楠本柊生帝國元帥-vol.18 走れ！元帥危機一髪-）
+
+ほう。死人の眼が生き返った。どうやら此度の戦いは我がライヒス・リッターの勝利であるようだな。全ては皇帝陛下の御為に…
+（楠本柊生帝國元帥-vol.18 走れ！元帥危機一髪-）
+
+星野中佐、風間少佐、解るか。我々は本来かような意志の元過ごしてきたんだ。
+（春木亮太朗大佐-vol.18 走れ！元帥危機一髪-）
+
+我が心は今すべてを理解した。我が精神も肉体もすべては諸君らの元にある。故にその志ある限り滅することは有り得ず、その存在は幾度となく蘇るのだ！！
+（楠本柊生帝國元帥-vol.18 走れ！元帥危機一髪-）
+
+ここが戦場であらば、貴官は死んだな
+…起き上がれ。
+（楠本柊生帝國元帥-vol.18 走れ！元帥危機一髪-）
+
+戦場で死に至るは不運であるからではない。死するも生きるも、すべてこの場にて決まっている。戦場で死する者は、この場でも生きながらにして死人である！我がライヒス・リッターに死人は要らぬ。貴官らは死人ではないか！！
+（楠本柊生帝國元帥-vol.18 走れ！元帥危機一髪-）
+
+同じ道を歩めるか！！
+（楠本柊生帝國元帥-vol.18 走れ！元帥危機一髪-）
+
+勝利を確信できるか！！
+（楠本柊生帝國元帥-vol.18 走れ！元帥危機一髪-）
+
+誰も貴官らの事など疑っておらん。みんな信じてるから。
+（楠本柊生帝國元帥-vol.20 3年B組楠本先生-）
+
+貴官らなら大丈夫だ。もっと自分に自信を持て。
+（楠本柊生帝國元帥-vol.20 3年B組楠本先生-）
+
+実際に頂点に立たれている今、周りの我々がしっかりせねばな。
+（春木亮太朗大佐-vol.18 走れ！元帥危機一髪-）
+
+あの頃はきっと柊生元帥お一人で帝國の命運を背負っていらっしゃったんだ。
+（定光寺輝信中将-vol.18 走れ！元帥危機一髪-）
+
+ささしまライブ駅と掛けまして、高級美容液と解きます。その心は、どちらも一駅（一液）でいいでしょう。くすっちです！
+（楠本柊生帝國元帥-ライヒスリッターExpo〜お魚になった忍者でござる・忍者編〜-）
+
+ほらほら…私はお母さんじゃないだろう。
+（楠本柊生帝國元帥-vol.20 3年B組楠本先生-）
+
+柊生元帥！小官、内通者なんかじゃありません！小官は！何も知らないんです！お母～さ～ん！
+（風間利之少佐-vol.20 3年B組楠本先生-）
+
+はっ！あ、あの何か？
+（風間利之少佐-vol.20 3年B組楠本先生-）
+
+運命や宿命が変わることを奇跡と呼ぶが、人はそれすら運命や宿命という言葉で片付けてしまうことがある。なぜなら、運命も宿命も毎日変わり続けるものであり、奇跡もまた、諸君らの身近な場所で毎日起こり続けているものであるのだ。
+（楠本柊生帝國元帥-vol.16 お魚になった元帥-）
+
+臣民諸君、私が歩んできた道が、帝國の歴史である。
+そして私がこれから歩み続ける道が帝國の未来である！
+臣民諸君、我とともに歩み続けよう。
+我々とともに帝國の未来を見続けよう。
+我が身は常に諸君らとともにある。
+（楠本柊生帝國元帥-vol.16 お魚になった元帥-）
+
+この男を殺させはしない。何があろうと、この男は殺させは…しない。たとえそれが大いなる意志であろうと、この男は…生きて…帝都へ…あぁ！
+（Pちゃん-vol.16 お魚になった元帥-）
+
+幸いなるは、今だす一歩を間違えぬこと。
+幸いなるは、己を省みることを怠らぬこと。
+幸いなるは、人を知る心を持つこと。
+以上三つで事は成る。
+されば是、幸いなるかな。
+（楠本柊生帝國元帥-vol.4 ニホン遠征-）
+
+天が呼ぶ。地が呼ぶ。人が呼ぶ。お風呂湧いたよ〜とお母ちゃんが呼ぶ！
+（成り上がりエース-vol.16 お魚になった元帥-）
+
+柊生元帥はお魚として生まれ変わったのだ
+（定光寺輝信中将-vol.16 お魚になった元帥-）
+
+運命や宿命で人は生かされているというのなら、運命や宿命に逆らうよりも、光り輝く一瞬を諸君らとともに生きよう。
+運命も宿命も決して変わらぬものであるから……
+（楠本柊生帝國元帥-vol.16 お魚になった元帥-）
+
+あやまらなくていい！
+（春木亮太朗大佐-vol.16 お魚になった元帥-）
+
+バイバイキーン！
+（パン屋のPちゃん-vol.16 お魚になった元帥-）
+
+ガビーン！
+（立花　馨大将-vol.16 お魚になった元帥-）
+
+ガビーン…
+（有馬竜ノ介大尉-vol.16 お魚になった元帥-）
+
+もういいんですよ。お疲れ様。
+（定光寺輝信中将-vol.16 お魚になった元帥-）
+
+あぁ、定光寺中将。私の代わりにこの者たちを納得させておいてくれ
+（楠本柊生帝國元帥-vol.16 お魚になった元帥-）
+
+祝賀会では人の目もある故、普段言い慣れぬ言葉はこの場にて言っておこうか…
+………諸君らのおかげだ…どうも有難う。
+（楠本柊生帝國元帥-vol.16 お魚になった元帥-）
+
+Pちゃんはどう思う？
+（有馬竜ノ介大尉-Vol.16 お魚になった元帥-）
+
+馬鹿か貴官は！
+（定光寺輝信中将-vol.16 お魚になった元帥-）
+
+柊生元帥…思えば士官学校を卒業して以来、小官の人生は柊生元帥の為のみに存在しておりました……。
+（定光寺輝信中将-vol.16 お魚になった元帥-）
+
+定光寺中将…悲しむなとは言わん。皆気持ちは一緒だ。その涙枯れるまで泣き続ければいい。悲しんで、悲しんで、悲しみ抜いたら、また戻ってこい。
+（立花馨大将-vol.16 お魚になった元帥-）
+
+……ご無事でした。
+（パン屋のPちゃん-vol.16 お魚になった元帥-）
+
+柊生元帥……もう本当にお会いできないんですか
+（定光寺輝信中将-vol.16 お魚になった元帥-）
+
+我が帝國の元首は皇帝陛下であって、私ではない。
+（楠本柊生帝國元帥-vol.16 お魚になった元帥-）
+
+柊生元帥、どうかお考え直しを
+（立花馨大将-vol.16 お魚になった元帥-）
+
+屁理屈をおっしゃられますな
+（立花馨大将-vol.16 お魚になった元帥-）
+
+敵軍は分散した兵力を第２公國国境付近へ集結させるらしい。各個撃破する格好のチャンスである。
+（楠本柊生帝國元帥-vol.16 お魚になった元帥-）
+
+とりあえず、リッターを全部立花にします
+（立花馨大将-Vol.13 この木なんの木西遊記 -）
+
+ゴジラです！
+（草薙護大佐-Vol.14 14回目だ第14帝國 -）
+
+柊生元帥、帝國へ帰りましょう…二人で来たんですから…二人で戻りましょう…
+（定光寺輝信中将-vol.16 お魚になった元帥-）
+
+シュウシュウっていうな！
+（楠本柊生帝國元帥-vol.7 おかえり立花大将 -）
+
+この肉体が朽ち果てても、まだ存在出来る世界があるのなら、その向こう側でまた会おう
+（楠本柊生帝國元帥-Vol.10 元帥UFOにのる -）
+
+おのれ、天崎！
+（藤原是親少佐-Vol.11 元帥のミッキーマウス -）
+
+敗軍の司令官に勲章を与えるのは初めてだ
+（楠本柊生帝國元帥-Vol.12 元帥の耳はロバの耳 -）
+
+これ知ってる、シカトって言うんだ
+（楠本柊生帝國元帥-Vol.11 元帥のミッキーマウス -）
+
+嬉しいか……良かったな（涙）
+（楠本柊生帝國元帥-vol.6 〇〇のいない日 -）
+
+人という字は支え合って…
+（春木亮太朗中佐-vol.7 おかえり立花大将 -）
+
+耳…生えたんでしょ？
+（定光寺輝信中将-Vol.12 元帥の耳はロバの耳 -）
+
+これぞ、血の団結だ！
+（楠本柊生帝國元帥-vol.８ 元帥とドラえもん -）
+
+おねんねとはいい気なもんじゃねえか
+（加納友緒中佐-Vol.24 題名のない第14帝國-）
+
+CMといったらやっぱり春木！
+（春木亮太朗大佐-オールナイト14 -）
+
+立花が、こんなことで死ぬはずがないんだ、立花、立花ー！
+（楠本柊生帝國元帥-vol.6 〇〇のいない日 -）
+
+海だ海だ！
+（楠本柊生帝國元帥-Vol.14 14回目だ第14帝國 -）
+
+こどものためなら、親は喜んで死ねるのです
+（楠本のび太伯爵-Vol.17 のび太の第14帝國 -）
+
+ひとに銃口を向けたのなら、ためらわずに引き金を引くべきだ。でなければ戦場では命を失う…。ただし、わたしは不死身だがな
+（楠本柊生中将-Vol.24 題名のない第14帝國-）
+
+…柊生元帥って、本当は皇帝陛下なんじゃないんですか？
+（定光寺輝信中将-Vol.24 題名のない第14帝國-）
+
+古き時代の終焉は新たなる時代の到来を意味するものであるらしい。
+（楠本柊生帝國元帥-vol.12 元帥の耳はロバの耳-）
+
+元来戦争とは選ばれし者に課せられた宿命であり、自らの死を名誉ある死と評することのできる者のみに与えられた特権であるはずだった。新たなる時代は、それすらも我々から奪おうというのか…
+（楠本柊生帝國元帥-vol.12 元帥の耳はロバの耳-）
+
+あの民衆は何を想い死んでいくのであろうな。人を想い故郷を想い死んでいくのであろうか。そのような死が名誉ある死などと呼べるものであるのか。
+（楠本柊生帝國元帥-vol.12 元帥の耳はロバの耳-）
+
+忘れるな…我々の存在など、大いなる意志が具現化されたものでしかないんだ。
+（楠本柊生帝國元帥-vol.12 元帥の耳はロバの耳-）
+
+第４公國最高司令官、立花馨大将。統合幕僚総監を返上する。
+天命により逆賊楠本柊生を討伐する！
+志を同じくする者は我に続け！！
+（立花馨大将-vol.10 元帥UFOにのる-）
+
+もっと自分に自信をもってなんでも言ってみなさい。全部言ったとおりになるんです。
+（楠本先生-vol.20 3年B組楠本先生-）
+
+こんな時間に一体何が起きたというのだ。
+（加納友緒中佐-vol.12 元帥の耳はロバの耳-）
+
+しかし敵は６０万の大軍、我がライヒスリッターの総兵力を挙げたとしてもその三分の一に過ぎんのだ。
+（定光寺輝信中将-vol.12 元帥の耳はロバの耳-）
+
+たまにはこうして下の者の意見を聞いてみるのも必要かもしれませんね。
+（広石幸朝中尉-vol.20 3年B組楠本先生）
+
+まったくだ。階級が下だからといって、いつも発言させないというのはどうかと思う。
+（倉橋健少尉-vol.20 3年B組楠本先生）
+
+しかし！明日困らぬためにも今日中に出来ることだけでも。
+（春木亮太朗大佐-vol.20 3年B組楠本先生）
+
+お前らも頑張れよ～
+（有馬竜之介大尉-vol.20 3年B組楠本先生）
+
+はい、ご主人様。
+（楠本先生-vol.20 3年B組楠本先生-）
+
+しかし、小官のような者にご相談いただけたら大変光栄です。
+（長沢環大尉-vol.20 3年B組楠本先生-）
+
+我が覇道にたちこめんとする暗雲は、我らが疾風をもってこれを霧消し皇帝陛下の御威光の元、帝國に晴天をもたらさねばならぬ。
+（楠本柊生帝國元帥-vol.20 3年B組楠本先生）
+
+つまり、敵が攻めてきた。これをみんなでやっつけようってことだ。
+（楠本柊生帝國元帥-vol.20 3年B組楠本先生）
+
+どうせ死ぬってのに…。
+（風間利之少佐-vol.20 3年B組楠本先生-）
+
+本当の信頼っていうのはなぁ どんな状況にあっても決して揺らぐことはないんだよ。
+（立花馨大将-vol.20 3年B組楠本先生-）
+
+は、え～小官が死んでしまって、たくさんの人に迷惑をかけたみたいで、本当もうスイマセン。
+（星野和臣中佐-vol.20 3年B組楠本先生-）
+
+これからは心入れ替えて立派な軍人になります。
+（春木亮太朗大佐-vol.20 3年B組楠本先生-）`;
 
 // パース
 function parseData(raw) {
@@ -773,7 +1109,9 @@ function parseData(raw) {
       chara = inner.slice(0, dashIdx).trim();
       source = inner.slice(dashIdx + 1).trim();
     }
-    result.push({ text, chara, source });
+    const volMatch = source.match(/[Vv]ol\.?\s*[\d０-９]+|オールナイト[\d０-９１２３４５６７８９]+|Expo[^\-]*/);
+    const vol = volMatch ? volMatch[0].trim().replace(/^[Vv]ol/, 'vol') : '';
+    result.push({ text, chara, source, vol });
   }
   return result;
 }
@@ -782,6 +1120,7 @@ let allSerifu = parseData(rawData);
 let filtered = [...allSerifu];
 let current = null;
 let currentChara = 'all';
+let currentVol = 'all';
 let searchQuery = '';
 
 // 検索
@@ -804,15 +1143,79 @@ searchClear.addEventListener('click', () => {
 function applyFilter() {
   filtered = allSerifu.filter(s => {
     const charaMatch = currentChara === 'all' || s.chara === currentChara;
+    const volMatch = currentVol === 'all' || s.vol === currentVol;
     const q = searchQuery.toLowerCase();
     const textMatch = !q ||
       s.text.toLowerCase().includes(q) ||
       s.chara.toLowerCase().includes(q) ||
       s.source.toLowerCase().includes(q);
-    return charaMatch && textMatch;
+    return charaMatch && volMatch && textMatch;
   });
+  current = null; // フィルター変更時はリセット
   updateCounter();
   showRandom();
+}
+
+// vol一覧生成
+function buildVolFilters() {
+  const scroll = document.getElementById('volScroll');
+  const vols = [...new Set(allSerifu.map(s => s.vol).filter(Boolean))].sort((a, b) => {
+    const na = parseInt(a.replace(/[^0-9]/g, '')) || 0;
+    const nb = parseInt(b.replace(/[^0-9]/g, '')) || 0;
+    return na - nb;
+  });
+  vols.forEach(vol => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn';
+    btn.dataset.vol = vol;
+    btn.textContent = vol;
+    btn.onclick = () => setVolFilter(vol);
+    scroll.appendChild(btn);
+  });
+}
+
+function setVolFilter(vol) {
+  currentVol = vol;
+  document.querySelectorAll('#volScroll .filter-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.vol === vol);
+  });
+  applyFilter();
+}
+
+// コピー
+function copySerifu() {
+  if (!current) return;
+  const text = `${current.text}\n（${current.chara}-${current.source}）`;
+  const btn = document.getElementById('btnCopy');
+
+  // clipboard API を試みて、ダメなら textarea fallback
+  const doFallback = () => {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+  };
+
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).catch(doFallback);
+    } else {
+      doFallback();
+    }
+  } catch(e) {
+    doFallback();
+  }
+
+  btn.textContent = 'コピー済 ✓';
+  btn.classList.add('copied');
+  setTimeout(() => {
+    btn.textContent = 'コピー';
+    btn.classList.remove('copied');
+  }, 2000);
 }
 
 // キャラ一覧生成
@@ -831,7 +1234,7 @@ function buildFilters() {
 
 function setFilter(chara) {
   currentChara = chara;
-  document.querySelectorAll('.filter-btn').forEach(b => {
+  document.querySelectorAll('#filterScroll .filter-btn').forEach(b => {
     b.classList.toggle('active', b.dataset.chara === chara);
   });
   applyFilter();
@@ -842,8 +1245,6 @@ function updateCounter() {
 }
 
 function showRandom() {
-  if (filtered.length === 0) return;
-
   const textEl = document.getElementById('serifuText');
   const metaEl = document.getElementById('serifuMeta');
 
@@ -851,8 +1252,17 @@ function showRandom() {
   metaEl.classList.remove('visible');
 
   setTimeout(() => {
-    let candidates = filtered.filter(s => s !== current);
-    if (candidates.length === 0) candidates = filtered;
+    if (filtered.length === 0) {
+      textEl.textContent = '該当するセリフがありません';
+      document.getElementById('metaChara').textContent = '';
+      document.getElementById('metaSource').textContent = '';
+      textEl.classList.add('visible');
+      return;
+    }
+
+    const candidates = filtered.length > 1 && current
+      ? filtered.filter(s => s !== current)
+      : filtered;
     current = candidates[Math.floor(Math.random() * candidates.length)];
 
     textEl.textContent = current.text;
@@ -868,6 +1278,7 @@ function showRandom() {
 
 // 初期化
 buildFilters();
+buildVolFilters();
 updateCounter();
 showRandom();
 </script>
